@@ -1,0 +1,22 @@
+-------------------------------------------------------------------------------
+Test set: CreateCourierTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 9.548 s <<< FAILURE! - in CreateCourierTest
+createDuplicateCourierFailure(CreateCourierTest)  Time elapsed: 0.812 s  <<< FAILURE!
+java.lang.AssertionError: 
+1 expectation failed.
+JSON path message doesn't match.
+Expected: Этот логин уже используется
+  Actual: Этот логин уже используется. Попробуйте другой.
+
+	at CreateCourierTest.createDuplicateCourierFailure(CreateCourierTest.java:71)
+
+createCourierWithExistingLoginFailure(CreateCourierTest)  Time elapsed: 0.463 s  <<< FAILURE!
+java.lang.AssertionError: 
+1 expectation failed.
+JSON path message doesn't match.
+Expected: Этот логин уже используется
+  Actual: Этот логин уже используется. Попробуйте другой.
+
+	at CreateCourierTest.createCourierWithExistingLoginFailure(CreateCourierTest.java:116)
+
