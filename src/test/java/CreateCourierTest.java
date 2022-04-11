@@ -10,6 +10,7 @@ import ru.yandex.scooter.client.CourierApiClient;
 import ru.yandex.scooter.model.Courier;
 import ru.yandex.scooter.steps.CourierStep;
 
+import static java.net.HttpURLConnection.*;
 import static org.hamcrest.Matchers.*;
 
 
@@ -27,11 +28,8 @@ public class CreateCourierTest {
 
     @Before
     public void setUp() {
-        // задаем базовую часть адреса
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-
         // создаем модель курьера с рандомными данными
-        courier = Courier.getRandomCourier();
+        courier = CourierStep.getRandomCourier();
     }
 
     @After
@@ -53,7 +51,7 @@ public class CreateCourierTest {
         // сохраняем id созданного курьера
         id = step.getCourierId(courier);
         // проверяем код ответа и текст сообщения
-        response.statusCode(201).and().assertThat().body("ok", equalTo(true));
+        response.statusCode(HTTP_CREATED).and().assertThat().body("ok", equalTo(true));
     }
 
     @Test
@@ -68,7 +66,7 @@ public class CreateCourierTest {
         // повторно выполняем запрос на создание курьера
         response = courierApi.createCourier(courier);
         // проверяем код ответа и сообщение
-        response.statusCode(409).and().assertThat().body("message", equalTo("Этот логин уже используется"));
+        response.statusCode(HTTP_CONFLICT).and().assertThat().body("message", equalTo("Этот логин уже используется"));
 
     }
 
@@ -82,7 +80,7 @@ public class CreateCourierTest {
         // выполняем запрос на создание курьера
         response = courierApi.createCourier(courier);
         // проверяем код ответа и сообщение
-        response.statusCode(400).and().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
+        response.statusCode(HTTP_BAD_REQUEST).and().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
 
     }
 
@@ -96,7 +94,7 @@ public class CreateCourierTest {
         // выполняем запрос на создание курьера
         response = courierApi.createCourier(courier);
         // проверяем код ответа и сообщение
-        response.statusCode(400).and().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
+        response.statusCode(HTTP_BAD_REQUEST).and().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
 
     @Test
@@ -113,7 +111,7 @@ public class CreateCourierTest {
         // повторно регистрируем курьера с таким же логином
         response = courierApi.createCourier(courier);
         // проверяем код ответа и сообщение
-        response.statusCode(409).and().assertThat().body("message", equalTo("Этот логин уже используется"));
+        response.statusCode(HTTP_CONFLICT).and().assertThat().body("message", equalTo("Этот логин уже используется"));
     }
 
 }

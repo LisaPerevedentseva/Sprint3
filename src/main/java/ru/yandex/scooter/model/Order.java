@@ -33,20 +33,6 @@ public class Order {
         this.color=color;
     }
 
-    @Step ("Создаем рандомный заказ с цветом самоката {color}")
-    public Order getRandomOrder (String[] color){
-        String firstName= RandomStringUtils.randomAlphabetic(8);
-        String lastName=RandomStringUtils.randomAlphabetic(8);
-        String address=RandomStringUtils.randomAlphabetic(8) +"," + RandomStringUtils.randomNumeric(3);
-        String metroStation=RandomStringUtils.randomNumeric(1);
-        String phone="+7" + RandomStringUtils.randomNumeric(10);
-        int rentTime= RandomUtils.nextInt(1, 7);
-        String deliveryDate= DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
-        String comment=RandomStringUtils.randomAlphabetic(8);
-        String[] colors=color;
-        return new Order (firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, colors);
-    }
-
     public String getFirstName() {
         return firstName;
     }

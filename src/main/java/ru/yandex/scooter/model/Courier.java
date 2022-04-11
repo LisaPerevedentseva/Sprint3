@@ -16,15 +16,6 @@ public class Courier {
         this.firstName=firstName;
     }
 
-    // метод для создания курьера с рандомными данными
-    @Step("Создаем курьера с рандомными данными")
-    public static Courier getRandomCourier(){
-        final String login = RandomStringUtils.randomAlphabetic(10);
-        final String password = RandomStringUtils.randomAlphabetic(10);
-        final String firstName = RandomStringUtils.randomAlphabetic(10);
-        return new Courier(login, password, firstName);
-    }
-
     //конструктор без параметров для Gson
     public Courier(){}
 

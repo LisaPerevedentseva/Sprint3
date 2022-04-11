@@ -11,16 +11,11 @@ import ru.yandex.scooter.client.OrderApiClient;
 import ru.yandex.scooter.model.Order;
 import ru.yandex.scooter.steps.OrderStep;
 
+import static java.net.HttpURLConnection.HTTP_CREATED;
 import static org.hamcrest.Matchers.*;
 
 @RunWith(Parameterized.class)
 public class CreateOrderParameterizedTest {
-
-    @Before
-    public void setUp() {
-        // задаем базовую часть адреса
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-    }
 
     @After
     public void clearData(){
@@ -46,10 +41,10 @@ public CreateOrderParameterizedTest (Order order, int expectedStatusCode){
 @Parameterized.Parameters
 public static Object[] getDataForTest (){
     return new Object [][]{
-            {new Order().getRandomOrder(new String[]{"BLACK"}), 201},
-            {new Order().getRandomOrder(new String[]{"GREY"}), 201},
-            {new Order().getRandomOrder(new String[]{"BLACK", "GREY"}), 201},
-            {new Order().getRandomOrder(new String[]{}), 201}
+            {new OrderStep().getRandomOrder(new String[]{"BLACK"}), HTTP_CREATED},
+            {new OrderStep().getRandomOrder(new String[]{"GREY"}), HTTP_CREATED},
+            {new OrderStep().getRandomOrder(new String[]{"BLACK", "GREY"}), HTTP_CREATED},
+            {new OrderStep().getRandomOrder(new String[]{}), HTTP_CREATED}
     };
 }
 

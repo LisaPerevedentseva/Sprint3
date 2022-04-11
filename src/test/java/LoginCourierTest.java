@@ -8,8 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.yandex.scooter.client.CourierApiClient;
 import ru.yandex.scooter.model.Courier;
+import ru.yandex.scooter.model.CourierCredentials;
 import ru.yandex.scooter.steps.CourierStep;
 
+import static java.net.HttpURLConnection.*;
 import static org.hamcrest.Matchers.*;
 
 public class LoginCourierTest {
@@ -22,20 +24,21 @@ public class LoginCourierTest {
 
     Courier courier;
 
+    CourierCredentials courierCredentials;
+
     int courierId;
 
     @Before
     public void setUp() {
-        // задаем базовую часть адреса
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-
         // создаем объект для работы с методами курьера
         courierApi = new CourierApiClient();
 
         // перед каждым тестом создаем курьера, определяем его id
-        courier = Courier.getRandomCourier();
+        courier = CourierStep.getRandomCourier();
         courierApi.createCourier(courier);
         courierId = step.getCourierId(courier);
+        // создаем объект с авторизационными данными курьера
+        courierCredentials = new CourierCredentials(courier);
 
     }
 
@@ -51,9 +54,9 @@ public class LoginCourierTest {
     public void loginCourierWithCorrectCredentialSuccess(){
 
         // вызываем метод авторизации с коректными кредами
-        response = courierApi.loginCourier(courier.getLogin(), courier.getPassword());
+        response = courierApi.loginCourier(courierCredentials);
         // проверяем код ответа и тело
-        response.statusCode(200).and().body("id", notNullValue());
+        response.statusCode(HTTP_OK).and().body("id", notNullValue());
 
     }
 
@@ -63,11 +66,11 @@ public class LoginCourierTest {
     public void loginCourierWithIncorrectLoginFailure(){
 
         // меняем логин курьера
-        courier.setLogin(RandomStringUtils.randomAlphabetic(10));
+        courierCredentials.setLogin(RandomStringUtils.randomAlphabetic(10));
         // вызываем метод авторизации с некоректным логином
-        response = courierApi.loginCourier(courier.getLogin(), courier.getPassword());
+        response = courierApi.loginCourier(courierCredentials);
         // проверяем код ответа и тело
-        response.statusCode(404).and().body("message", equalTo("Учетная запись не найдена"));
+        response.statusCode(HTTP_NOT_FOUND).and().body("message", equalTo("Учетная запись не найдена"));
 
     }
 
@@ -77,11 +80,11 @@ public class LoginCourierTest {
     public void loginCourierWithIncorrectPasswordFailure(){
 
         // меняем пароль
-        courier.setPassword(RandomStringUtils.randomAlphabetic(10));
+        courierCredentials.setPassword(RandomStringUtils.randomAlphabetic(10));
         // вызываем метод авторизации с некоректным логином
-        response = courierApi.loginCourier(courier.getLogin(), courier.getPassword());
+        response = courierApi.loginCourier(courierCredentials);
         // проверяем код ответа и тело
-        response.statusCode(404).and().body("message", equalTo("Учетная запись не найдена"));
+        response.statusCode(HTTP_NOT_FOUND).and().body("message", equalTo("Учетная запись не найдена"));
 
     }
 
@@ -91,11 +94,11 @@ public class LoginCourierTest {
     public void loginCourierWithoutLoginFailure(){
 
         // меняем пароль
-        courier.setLogin("");
+        courierCredentials.setLogin("");
         // вызываем метод авторизации с некоректным логином
-        response = courierApi.loginCourier(courier.getLogin(), courier.getPassword());
+        response = courierApi.loginCourier(courierCredentials);
         // проверяем код ответа и тело
-        response.statusCode(400).and().body("message", equalTo("Недостаточно данных для входа"));
+        response.statusCode(HTTP_BAD_REQUEST).and().body("message", equalTo("Недостаточно данных для входа"));
     }
 
     @Test
@@ -104,11 +107,11 @@ public class LoginCourierTest {
     public void loginCourierWithoutPasswordFailure(){
 
         // меняем пароль
-        courier.setPassword("");
+        courierCredentials.setPassword("");
         // вызываем метод авторизации с некоректным логином
-        response = courierApi.loginCourier(courier.getLogin(), courier.getPassword());
+        response = courierApi.loginCourier(courierCredentials);
         // проверяем код ответа и тело
-        response.statusCode(400).and().body("message", equalTo("Недостаточно данных для входа"));
+        response.statusCode(HTTP_BAD_REQUEST).and().body("message", equalTo("Недостаточно данных для входа"));
     }
 
 }

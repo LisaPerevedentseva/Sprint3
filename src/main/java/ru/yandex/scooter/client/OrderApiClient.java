@@ -9,6 +9,7 @@ import static io.restassured.RestAssured.given;
 public class OrderApiClient {
 
     private final String JSON = "application/json";
+    private final String BASE_URL = "http://qa-scooter.praktikum-services.ru/";
     private final String CREATE_ORDER_PATH="api/v1/orders";
     private final String CANCEL_ORDER_PATH="api/v1/orders/cancel";
     private final String LIST_OF_ORDERS_PATH="api/v1/orders";
@@ -20,7 +21,7 @@ public class OrderApiClient {
                 header("Content-type", JSON).
                 body(order).
                 when().
-                post(CREATE_ORDER_PATH).
+                post(BASE_URL+ CREATE_ORDER_PATH).
                 then();
 
     }
@@ -32,7 +33,7 @@ public class OrderApiClient {
                 header("Content-type", JSON).
                 body("{\"track\":" + "\"" + track + "\"}").
                 when().
-                put(CANCEL_ORDER_PATH).
+                put(BASE_URL+ CANCEL_ORDER_PATH).
                 then();
     }
 
@@ -41,7 +42,7 @@ public class OrderApiClient {
         return given().
                 header("Content-type", JSON).
                 when().
-                get(LIST_OF_ORDERS_PATH).
+                get(BASE_URL+ LIST_OF_ORDERS_PATH).
                 then();
     }
 
